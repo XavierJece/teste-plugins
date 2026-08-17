@@ -1,11 +1,10 @@
 const express = require("express");
 const app = express();
-app.use(express.json());
-
 const path = require("path");
-
 const cors = require("cors");
+
 app.use(cors());
+app.use(express.json());
 
 // Servir arquivos estáticos (opcional, mas prático)
 app.use(express.static(__dirname));
