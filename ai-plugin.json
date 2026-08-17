@@ -1,0 +1,18 @@
+{
+  "schema_version": "v1",
+  "name_for_human": "Assistente Stellantis POC",
+  "name_for_model": "stellantis",
+  "description_for_human": "Consulta o portfólio de veículos e agenda test drive.",
+  "description_for_model": "Plugin para consultar veículos da Stellantis e agendar test drives.",
+  "auth": {
+    "type": "none"
+  },
+  "api": {
+    "type": "openapi",
+    "url": "http://hyhwrycw2i2q2bes5xj8tya9.89.117.32.59.sslip.io/openapi.yaml",
+    "is_user_authenticated": false
+  },
+  "logo_url": "http://hyhwrycw2i2q2bes5xj8tya9.89.117.32.59.sslip.io/logo.png",
+  "contact_email": "seu-email@exemplo.com",
+  "legal_info_url": "http://hyhwrycw2i2q2bes5xj8tya9.89.117.32.59.sslip.io/legal"
+}

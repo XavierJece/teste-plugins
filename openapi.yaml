@@ -1,0 +1,65 @@
+openapi: 3.0.1
+info:
+  title: Stellantis API
+  description: Consulta veículos e agenda test drive
+  version: 1.0.0
+servers:
+  - url: http://hyhwrycw2i2q2bes5xj8tya9.89.117.32.59.sslip.io
+paths:
+  /api/veiculos:
+    get:
+      summary: Lista veículos do portfólio Stellantis
+      parameters:
+        - name: marca
+          in: query
+          schema:
+            type: string
+          description: Filtra por marca (ex Jeep, Fiat, Ram)
+      responses:
+        "200":
+          description: Lista de veículos
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  veiculos:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id: { type: string }
+                        marca: { type: string }
+                        modelo: { type: string }
+                        ano: { type: integer }
+                        preco: { type: string }
+                        imagem_url: { type: string }
+                        destaques: { type: array, items: { type: string } }
+  /api/test-drive:
+    post:
+      summary: Agenda um test drive
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - id_veiculo
+                - nome_cliente
+                - data
+              properties:
+                id_veiculo: { type: string }
+                nome_cliente: { type: string }
+                data: { type: string, example: "2026-08-20" }
+      responses:
+        "200":
+          description: Confirmação do agendamento
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  sucesso: { type: boolean }
+                  mensagem: { type: string }
+                  protocolo: { type: string }
