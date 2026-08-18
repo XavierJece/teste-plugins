@@ -6,6 +6,80 @@ import {
 } from "@modelcontextprotocol/sdk/types.js";
 import express from "express";
 
+// 1. Defina o HTML do seu Widget
+const WIDGET_TEMPLATE_URI = "ui://widget/stellantis-cards.html";
+const widgetHtml = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stellantis Cards</title>
+  <style>
+    /* Estilos básicos para os cards */
+    body { font-family: system-ui, sans-serif; padding: 16px; background: transparent; }
+    .card-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
+    @media (min-width: 600px) { .card-grid { grid-template-columns: 1fr 1fr; } }
+    .card { border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px; background: white; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    .card img { width: 100%; height: auto; border-radius: 4px; margin-bottom: 12px; }
+    .card h3 { margin: 0 0 4px 0; font-size: 1.1em; }
+    .card .price { font-weight: bold; color: #2563eb; }
+    .card .details { font-size: 0.9em; color: #4b5563; margin: 8px 0; }
+    .card button { background: #2563eb; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 500; }
+    .card button:hover { background: #1d4ed8; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script>
+    // Este script recebe os dados do tool result e renderiza os cards
+    function renderCards(data) {
+      const root = document.getElementById('root');
+      if (!data || !data.cards) {
+        root.innerHTML = '<p>Nenhum veículo encontrado.</p>';
+        return;
+      }
+
+      let html = '<div class="card-grid">';
+      data.cards.forEach(card => {
+        html += \`
+          <div class="card">
+            <img src="\${card.imagem}" alt="\${card.veiculo}" onerror="this.style.display='none'">
+            <h3>\${card.veiculo}</h3>
+            <div class="price">A partir de R$ \${card.menor_parcela}/mês</div>
+            <div class="details">Opções: \${card.opcoes_texto}</div>
+            <button onclick="window.openai.callTool('agendar_test_drive', { id_veiculo: '\${card.id_veiculo}' })">
+              Agendar Test Drive
+            </button>
+          </div>
+        \`;
+      });
+      html += '</div>';
+      root.innerHTML = html;
+    }
+
+    // Configura a comunicação com o host (ChatGPT)
+    window.addEventListener('message', (event) => {
+      if (event.source !== window.parent) return;
+      const message = event.data;
+      if (!message || message.jsonrpc !== '2.0') return;
+
+      // Recebe o resultado da ferramenta de renderização
+      if (message.method === 'ui/notifications/tool-result') {
+        const result = message.params?.structuredContent;
+        if (result) {
+          renderCards(result);
+        }
+      }
+    });
+
+    // Notifica o host que o widget está pronto
+    window.parent.postMessage({ jsonrpc: '2.0', method: 'ui/initialize' }, '*');
+  </script>
+</body>
+</html>
+`.trim();
+
 // ===== Dados dos veículos (atualizados com preços reais) =====
 const veiculos = [
   {
@@ -96,6 +170,23 @@ function calcularParcela(preco, taxa, meses) {
   return (preco * i * Math.pow(1 + i, n)) / (Math.pow(1 + i, n) - 1);
 }
 
+// 2. Registre o recurso do widget no servidor
+server.registerResource(
+  "stellantis-widget",
+  WIDGET_TEMPLATE_URI,
+  {},
+  async () => ({
+    contents: [
+      {
+        uri: WIDGET_TEMPLATE_URI,
+        mimeType: "text/html;profile=mcp-app",
+        text: widgetHtml,
+        _meta: { ui: { prefersBorder: true } },
+      },
+    ],
+  }),
+);
+
 // Handlers (mesmo de antes)
 server.setRequestHandler(ListToolsRequestSchema, async () => ({
   tools: [
@@ -141,7 +232,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
     {
       name: "calcular_financiamento",
       description:
-        "Calcula quais veículos da Stellantis cabem no orçamento mensal do cliente.",
+        "Calcula quais veículos da Stellantis cabem no orçamento mensal do cliente. Retorna dados estruturados.",
       inputSchema: {
         type: "object",
         properties: {
@@ -151,6 +242,31 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
           },
         },
         required: ["orcamento_mensal"],
+      },
+    },
+    {
+      name: "renderizar_financiamento",
+      description:
+        "Renderiza os resultados do financiamento em cards visuais. Deve ser chamada APÓS calcular_financiamento, passando os dados retornados por ela.",
+      inputSchema: {
+        type: "object",
+        properties: {
+          mensagem: { type: "string" },
+          cards: {
+            type: "array",
+            items: {
+              type: "object",
+              properties: {
+                id_veiculo: { type: "string" },
+                veiculo: { type: "string" },
+                imagem: { type: "string" },
+                opcoes_texto: { type: "string" },
+                menor_parcela: { type: "string" },
+              },
+            },
+          },
+        },
+        required: ["mensagem", "cards"],
       },
     },
   ],
@@ -250,56 +366,48 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       PRAZOS,
     );
 
-    // Formata os resultados com cards
-    const cards = resultados.map((item) => {
-      const opcoesTexto = item.opcoes
-        .map((o) => `${o.meses}x de R$ ${o.parcela.toFixed(2)}`)
-        .join(" | ");
-      return {
-        type: "card",
-        title: `${item.veiculo.marca} ${item.veiculo.modelo}`,
-        subtitle: `A partir de R$ ${item.opcoes[0].parcela.toFixed(2)}/mês`,
-        image: item.veiculo.imagem_url,
-        description: `Opções: ${opcoesTexto}`,
-        buttons: [
-          {
-            label: "Agendar Test Drive",
-            action: "agendar_test_drive",
-            params: { id_veiculo: item.veiculo.id },
-          },
-        ],
-      };
-    });
+    // Retorna APENAS os dados estruturados
+    const cardsData = resultados.map((item) => ({
+      id_veiculo: item.veiculo.id,
+      veiculo: `${item.veiculo.marca} ${item.veiculo.modelo}`,
+      imagem: item.veiculo.imagem_url,
+      opcoes_texto: item.opcoes
+        .map((o) => `${o.meses}x R$ ${o.parcela.toFixed(2)}`)
+        .join(" | "),
+      menor_parcela: item.opcoes[0].parcela.toFixed(2),
+    }));
 
-    // No handler do calcular_financiamento
     return {
+      structuredContent: {
+        mensagem: `Encontramos ${resultados.length} veículo(s) que cabem no seu orçamento.`,
+        cards: cardsData,
+      },
       content: [
         {
           type: "text",
-          text: `Encontramos ${resultados.length} veículos para seu orçamento:`,
+          text: `Encontramos ${resultados.length} veículo(s) que cabem no seu orçamento de R$ ${orcamento_mensal}/mês.`,
         },
-        ...resultados.map((item) => ({
-          type: "card",
-          title: `${item.veiculo.marca} ${item.veiculo.modelo}`,
-          subtitle: `R$ ${item.opcoes[0].parcela.toFixed(2)}/mês`,
-          image: item.veiculo.imagem_url,
-          description: item.opcoes
-            .map((o) => `${o.meses}x de R$ ${o.parcela.toFixed(2)}`)
-            .join(" | "),
-          buttons: [
-            {
-              label: "Ver detalhes",
-              action: "detalhes_veiculo",
-              params: { id: item.veiculo.id },
-            },
-            {
-              label: "Agendar test drive",
-              action: "agendar_test_drive",
-              params: { id_veiculo: item.veiculo.id },
-            },
-          ],
-        })),
       ],
+    };
+  }
+  if (name === "renderizar_financiamento") {
+    // Espera receber os mesmos dados que a ferramenta de dados retornou
+    const { mensagem, cards } = args;
+
+    // Valida se os dados necessários estão presentes
+    if (!cards || !Array.isArray(cards)) {
+      throw new Error("Dados de financiamento inválidos para renderizar.");
+    }
+
+    // Retorna os dados e a referência ao template UI
+    return {
+      structuredContent: { mensagem, cards },
+      content: [{ type: "text", text: mensagem }],
+      _meta: {
+        ui: {
+          resourceUri: WIDGET_TEMPLATE_URI, // <-- Link para o template HTML
+        },
+      },
     };
   }
   throw new Error(`Ferramenta desconhecida: ${name}`);
