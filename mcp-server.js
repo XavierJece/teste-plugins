@@ -122,7 +122,7 @@ const agendamentos = [];
 // ===== Servidor MCP =====
 const server = new Server(
   { name: "stellantis-assistant", version: "1.0.0" },
-  { capabilities: { tools: {} } },
+  { capabilities: { tools: {}, resources: {} } },
 );
 
 // ===== Configurações de financiamento =====
