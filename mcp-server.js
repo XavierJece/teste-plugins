@@ -172,23 +172,6 @@ function calcularParcela(preco, taxa, meses) {
   return (preco * i * Math.pow(1 + i, n)) / (Math.pow(1 + i, n) - 1);
 }
 
-// 2. Registre o recurso do widget no servidor
-server.registerResource(
-  "stellantis-widget",
-  WIDGET_TEMPLATE_URI,
-  {},
-  async () => ({
-    contents: [
-      {
-        uri: WIDGET_TEMPLATE_URI,
-        mimeType: "text/html;profile=mcp-app",
-        text: widgetHtml,
-        _meta: { ui: { prefersBorder: true } },
-      },
-    ],
-  }),
-);
-
 // Handlers (mesmo de antes)
 server.setRequestHandler(ListToolsRequestSchema, async () => ({
   tools: [
