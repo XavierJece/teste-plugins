@@ -327,6 +327,14 @@ app.post("/messages", async (req, res) => {
   await activeTransport.handlePostMessage(req, res);
 });
 
+// --- NOVO ENDPOINT PARA VER AGENDAMENTOS ---
+app.get("/appointments", (req, res) => {
+  res.json({
+    total: agendamentos.length,
+    agendamentos: agendamentos,
+  });
+});
+
 app.listen(port, () => {
   console.log(`🚀 MCP SSE server rodando em http://localhost:${port}`);
   console.log(`📡 Endpoint SSE: http://localhost:${port}/sse`);
