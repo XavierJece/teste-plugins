@@ -2,7 +2,9 @@ import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { SSEServerTransport } from "@modelcontextprotocol/sdk/server/sse.js";
 import {
   CallToolRequestSchema,
-  ListToolsRequestSchema,
+  ListResourcesRequestSchema,
+  ListToolsRequestSchema, // ← adicione
+  ReadResourceRequestSchema, // ← adicione
 } from "@modelcontextprotocol/sdk/types.js";
 import express from "express";
 
@@ -411,6 +413,36 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     };
   }
   throw new Error(`Ferramenta desconhecida: ${name}`);
+});
+
+// Handler para listar recursos disponíveis
+server.setRequestHandler(ListResourcesRequestSchema, async () => ({
+  resources: [
+    {
+      uri: WIDGET_TEMPLATE_URI,
+      name: "Stellantis Cards Widget",
+      description: "Widget que exibe cards de veículos financiáveis",
+      mimeType: "text/html;profile=mcp-app",
+    },
+  ],
+}));
+
+// Handler para ler o conteúdo do recurso
+server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
+  const { uri } = request.params;
+  if (uri === WIDGET_TEMPLATE_URI) {
+    return {
+      contents: [
+        {
+          uri: WIDGET_TEMPLATE_URI,
+          mimeType: "text/html;profile=mcp-app",
+          text: widgetHtml,
+          _meta: { ui: { prefersBorder: true } },
+        },
+      ],
+    };
+  }
+  throw new Error(`Recurso não encontrado: ${uri}`);
 });
 
 // ===== Servidor Express com SSE =====
