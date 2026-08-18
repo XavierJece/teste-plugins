@@ -84,36 +84,294 @@ const widgetHtml = `
 
 // ===== Dados dos veículos (atualizados com preços reais) =====
 const veiculos = [
+  // ===== FIAT =====
   {
-    id: "v1",
-    marca: "Jeep",
-    modelo: "Compass Longitude",
+    id: "f1",
+    marca: "Fiat",
+    modelo: "Mobi Like",
     ano: 2026,
-    preco: 194990.0, // preço em número (R$)
-    imagem_url:
-      "https://motorshow.com.br/wp-content/uploads/sites/2/2026/01/jeep-compass-longitude-t270-preto-carbon.jpg",
-    destaques: ["Motor T270", 'Central Multimídia 10.1"', "Tração 4x4"],
+    preco: 74990.00,
+    imagem_url: "https://www.fiat.com.br/content/dam/fiat/br/mobi/2025/versoes/like/like-frente.png",
+    destaques: ["1.0 Firefly", "Ar-condicionado", "Kit dignidade"]
   },
   {
-    id: "v2",
+    id: "f2",
+    marca: "Fiat",
+    modelo: "Argo Drive",
+    ano: 2026,
+    preco: 89990.00,
+    imagem_url: "https://www.fiat.com.br/content/dam/fiat/br/argo/2025/versoes/drive/drive-frente.png",
+    destaques: ["1.3 Firefly", "Central multimídia", "Vidros elétricos"]
+  },
+  {
+    id: "f3",
+    marca: "Fiat",
+    modelo: "Cronos Precision",
+    ano: 2026,
+    preco: 109990.00,
+    imagem_url: "https://www.fiat.com.br/content/dam/fiat/br/cronos/2025/versoes/precision/precision-frente.png",
+    destaques: ["1.3 Firefly", "Câmbio CVT", "Central 7\""]
+  },
+  {
+    id: "f4",
+    marca: "Fiat",
+    modelo: "Pulse Drive",
+    ano: 2026,
+    preco: 114990.00,
+    imagem_url: "https://www.fiat.com.br/content/dam/fiat/br/pulse/2025/versoes/drive/drive-frente.png",
+    destaques: ["1.0 Turbo 200", "Central 10.1\"", "Hill Holder"]
+  },
+  {
+    id: "f5",
+    marca: "Fiat",
+    modelo: "Fastback Abarth",
+    ano: 2026,
+    preco: 149990.00,
+    imagem_url: "https://www.fiat.com.br/content/dam/fiat/br/fastback/2025/versoes/abarth/abarth-frente.png",
+    destaques: ["1.3 Turbo 270", "Câmbio automático 6 marchas", "Escapamento esportivo"]
+  },
+  {
+    id: "f6",
+    marca: "Fiat",
+    modelo: "Toro Freedom",
+    ano: 2026,
+    preco: 169990.00,
+    imagem_url: "https://www.fiat.com.br/content/dam/fiat/br/toro/2025/versoes/freedom/freedom-frente.png",
+    destaques: ["1.3 Turbo", "Caçamba de 937L", "Central 10.1\""]
+  },
+  {
+    id: "f7",
     marca: "Fiat",
     modelo: "Toro Volcano",
     ano: 2026,
-    preco: 179990.0,
-    imagem_url:
-      "https://toro.fiat.com.br/content/dam/fiat/products/226/3pu/2/2027/page/hero-webp/hero-176.webp",
-    destaques: ["Caçamba de 937L", "Motor Turbo Diesel", 'Rodas 18"'],
+    preco: 189990.00,
+    imagem_url: "https://www.fiat.com.br/content/dam/fiat/br/toro/2025/versoes/volcano/volcano-frente.png",
+    destaques: ["2.0 Turbo Diesel", "Tração 4x4", "Rodas 18\""]
   },
   {
-    id: "v3",
+    id: "f8",
+    marca: "Fiat",
+    modelo: "Strada Ranch",
+    ano: 2026,
+    preco: 129990.00,
+    imagem_url: "https://www.fiat.com.br/content/dam/fiat/br/strada/2025/versoes/ranch/ranch-frente.png",
+    destaques: ["1.3 Firefly", "Cabine dupla", "Barras de teto"]
+  },
+  {
+    id: "f9",
+    marca: "Fiat",
+    modelo: "Ducato Cargo",
+    ano: 2026,
+    preco: 219990.00,
+    imagem_url: "https://www.fiat.com.br/content/dam/fiat/br/ducato/2025/versoes/cargo/cargo-frente.png",
+    destaques: ["2.3 Turbo Diesel", "Capacidade de carga 13m³", "Piso de borracha"]
+  },
+
+  // ===== JEEP =====
+  {
+    id: "j1",
+    marca: "Jeep",
+    modelo: "Renegade Sport",
+    ano: 2026,
+    preco: 119990.00,
+    imagem_url: "https://www.jeep.com.br/content/dam/jeep/br/renegade/2025/versoes/sport/sport-frente.png",
+    destaques: ["1.3 Turbo", "Tração dianteira", "Central 8.4\""]
+  },
+  {
+    id: "j2",
+    marca: "Jeep",
+    modelo: "Renegade Longitude",
+    ano: 2026,
+    preco: 139990.00,
+    imagem_url: "https://www.jeep.com.br/content/dam/jeep/br/renegade/2025/versoes/longitude/longitude-frente.png",
+    destaques: ["1.3 Turbo", "Tração 4x4", "Teto solar"]
+  },
+  {
+    id: "j3",
+    marca: "Jeep",
+    modelo: "Compass Sport",
+    ano: 2026,
+    preco: 174990.00,
+    imagem_url: "https://www.jeep.com.br/content/dam/jeep/br/compass/2025/versoes/sport/sport-frente.png",
+    destaques: ["2.0 Turbo Diesel", "Tração 4x4", "Central 10.1\""]
+  },
+  {
+    id: "j4",
+    marca: "Jeep",
+    modelo: "Compass Longitude",
+    ano: 2026,
+    preco: 199990.00,
+    imagem_url: "https://www.jeep.com.br/content/dam/jeep/br/compass/2025/versoes/longitude/longitude-frente.png",
+    destaques: ["2.0 Turbo Diesel", "Tração 4x4", "Pacote Adventure"]
+  },
+  {
+    id: "j5",
+    marca: "Jeep",
+    modelo: "Compass S",
+    ano: 2026,
+    preco: 229990.00,
+    imagem_url: "https://www.jeep.com.br/content/dam/jeep/br/compass/2025/versoes/s/s-frente.png",
+    destaques: ["2.0 Turbo Diesel", "Tração 4x4", "Bank premium"]
+  },
+  {
+    id: "j6",
+    marca: "Jeep",
+    modelo: "Commander Sport",
+    ano: 2026,
+    preco: 229990.00,
+    imagem_url: "https://www.jeep.com.br/content/dam/jeep/br/commander/2025/versoes/sport/sport-frente.png",
+    destaques: ["2.0 Turbo Diesel", "7 lugares", "Tração 4x4"]
+  },
+  {
+    id: "j7",
+    marca: "Jeep",
+    modelo: "Commander Limited",
+    ano: 2026,
+    preco: 269990.00,
+    imagem_url: "https://www.jeep.com.br/content/dam/jeep/br/commander/2025/versoes/limited/limited-frente.png",
+    destaques: ["2.0 Turbo Diesel", "7 lugares", "Bank premium"]
+  },
+  {
+    id: "j8",
+    marca: "Jeep",
+    modelo: "Wrangler Sport",
+    ano: 2026,
+    preco: 319990.00,
+    imagem_url: "https://www.jeep.com.br/content/dam/jeep/br/wrangler/2025/versoes/sport/sport-frente.png",
+    destaques: ["2.0 Turbo", "Tração 4x4", "Capota removível"]
+  },
+  {
+    id: "j9",
+    marca: "Jeep",
+    modelo: "Wrangler Rubicon",
+    ano: 2026,
+    preco: 389990.00,
+    imagem_url: "https://www.jeep.com.br/content/dam/jeep/br/wrangler/2025/versoes/rubicon/rubicon-frente.png",
+    destaques: ["2.0 Turbo", "Tração 4x4", "Diferenciais bloqueáveis"]
+  },
+
+  // ===== RAM =====
+  {
+    id: "r1",
+    marca: "Ram",
+    modelo: "Rampage Express",
+    ano: 2026,
+    preco: 239990.00,
+    imagem_url: "https://www.ram.com.br/content/dam/ram/br/rampage/2025/versoes/express/express-frente.png",
+    destaques: ["2.0 Turbo Diesel", "Tração 4x4", "Caçamba de 750kg"]
+  },
+  {
+    id: "r2",
     marca: "Ram",
     modelo: "Rampage Laramie",
     ano: 2026,
-    preco: 259990.0,
-    imagem_url:
-      "https://production.autoforce.com/uploads/version/profile_image/9571/model_main_webp_comprar-laramie-gasolina_ad38d2b3d6.png.webp",
-    destaques: ["Motor Hurricane 4", "Acabamento Premium", "Tração 4x4"],
+    preco: 279990.00,
+    imagem_url: "https://www.ram.com.br/content/dam/ram/br/rampage/2025/versoes/laramie/laramie-frente.png",
+    destaques: ["2.0 Turbo Diesel", "Tração 4x4", "Bank premium"]
   },
+  {
+    id: "r3",
+    marca: "Ram",
+    modelo: "Rampage R/T",
+    ano: 2026,
+    preco: 319990.00,
+    imagem_url: "https://www.ram.com.br/content/dam/ram/br/rampage/2025/versoes/rt/rt-frente.png",
+    destaques: ["2.0 Turbo Diesel", "Tração 4x4", "Escapamento esportivo"]
+  },
+  {
+    id: "r4",
+    marca: "Ram",
+    modelo: "1500 Rebel",
+    ano: 2026,
+    preco: 489990.00,
+    imagem_url: "https://www.ram.com.br/content/dam/ram/br/1500/2025/versoes/rebel/rebel-frente.png",
+    destaques: ["5.7 V8 HEMI", "Tração 4x4", "Suspensão elevada"]
+  },
+  {
+    id: "r5",
+    marca: "Ram",
+    modelo: "1500 Laramie",
+    ano: 2026,
+    preco: 559990.00,
+    imagem_url: "https://www.ram.com.br/content/dam/ram/br/1500/2025/versoes/laramie/laramie-frente.png",
+    destaques: ["5.7 V8 HEMI", "Tração 4x4", "Acabamento premium"]
+  },
+
+  // ===== CITROËN =====
+  {
+    id: "c1",
+    marca: "Citroën",
+    modelo: "C3 Live",
+    ano: 2026,
+    preco: 79990.00,
+    imagem_url: "https://www.citroen.com.br/content/dam/citroen/br/c3/2025/versoes/live/live-frente.png",
+    destaques: ["1.0 Firefly", "Ar-condicionado", "Central multimídia"]
+  },
+  {
+    id: "c2",
+    marca: "Citroën",
+    modelo: "C3 Feel",
+    ano: 2026,
+    preco: 89990.00,
+    imagem_url: "https://www.citroen.com.br/content/dam/citroen/br/c3/2025/versoes/feel/feel-frente.png",
+    destaques: ["1.0 Turbo", "Central 10.1\"", "Ar condicionado automático"]
+  },
+  {
+    id: "c3",
+    marca: "Citroën",
+    modelo: "C3 Aircross",
+    ano: 2026,
+    preco: 109990.00,
+    imagem_url: "https://www.citroen.com.br/content/dam/citroen/br/c3-aircross/2025/versoes/feel/feel-frente.png",
+    destaques: ["1.0 Turbo", "7 lugares", "Central 10.1\""]
+  },
+  {
+    id: "c4",
+    marca: "Citroën",
+    modelo: "C4 Lounge",
+    ano: 2026,
+    preco: 139990.00,
+    imagem_url: "https://www.citroen.com.br/content/dam/citroen/br/c4/2025/versoes/lounge/lounge-frente.png",
+    destaques: ["1.6 THP", "Câmbio automático", "Acabamento premium"]
+  },
+
+  // ===== PEUGEOT =====
+  {
+    id: "p1",
+    marca: "Peugeot",
+    modelo: "208 Like",
+    ano: 2026,
+    preco: 89990.00,
+    imagem_url: "https://www.peugeot.com.br/content/dam/peugeot/br/208/2025/versoes/like/like-frente.png",
+    destaques: ["1.0 Firefly", "Central 7\"", "Ar-condicionado"]
+  },
+  {
+    id: "p2",
+    marca: "Peugeot",
+    modelo: "208 GT",
+    ano: 2026,
+    preco: 119990.00,
+    imagem_url: "https://www.peugeot.com.br/content/dam/peugeot/br/208/2025/versoes/gt/gt-frente.png",
+    destaques: ["1.0 Turbo 200", "Painel 3D", "Bank premium"]
+  },
+  {
+    id: "p3",
+    marca: "Peugeot",
+    modelo: "2008 Allure",
+    ano: 2026,
+    preco: 139990.00,
+    imagem_url: "https://www.peugeot.com.br/content/dam/peugeot/br/2008/2025/versoes/allure/allure-frente.png",
+    destaques: ["1.0 Turbo 200", "Central 10.1\"", "Teto panorâmico"]
+  },
+  {
+    id: "p4",
+    marca: "Peugeot",
+    modelo: "3008 GT",
+    ano: 2026,
+    preco: 219990.00,
+    imagem_url: "https://www.peugeot.com.br/content/dam/peugeot/br/3008/2025/versoes/gt/gt-frente.png",
+    destaques: ["1.6 THP", "Painel i-Cockpit", "Acabamento exclusivo"]
+  }
 ];
 
 // ===== Banco de agendamentos (em memória) =====
