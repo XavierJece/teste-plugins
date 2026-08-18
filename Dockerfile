@@ -3,8 +3,8 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 COPY server.js .
-COPY mcp-sse-server.js .
+COPY mcp-server.js .
 COPY openapi.yaml .
 COPY ai-plugin.json .
 EXPOSE 3000
-CMD ["node", "mcp-sse-server.js"]
+CMD ["node", "mcp-server.js"]
